@@ -155,8 +155,123 @@ public class Functions {
         
     }
   
-  
-  
+    public static synchronized void deposit(DataInputStream input, DataOutputStream output) throws SQLException, IOException {
+//         String trans = "";
+        try (output) {
+            //         String trans = "";
+            int e_cash = 0; //wallet 
+            int bank_cash = 0;
+            boolean trans_check = false;
+            //returning ewallet
+            String uname = input.readUTF();
+            String query = "SELECT E_WALLET,CVV_NUMBER FROM PERSON WHERE USERNAME = '" + uname + "'";
+            PreparedStatement ps = ServerMultiClients.con.prepareStatement(query);
+//            
+
+//            System.out.println(uname);
+            System.out.println("7agaaa");
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            e_cash = rs.getInt(1);
+            System.out.println(rs.getInt(1));
+
+            output.writeInt(e_cash);
+
+            int cvv = rs.getInt(2); // granted
+
+            // if check is selected
+            int flag_trans = input.readInt();
+            System.out.println(flag_trans);
+            String trans = null;
+            if (flag_trans >= 1) {
+                trans = input.readUTF();
+
+                String query2 = "SELECT COUNT(USERNAME) AS C FROM PERSON WHERE USERNAME='" + trans + "'";
+                PreparedStatement ps2 = ServerMultiClients.con.prepareStatement(query2);
+
+                ResultSet rs2 = ps2.executeQuery();
+                rs2.next();
+//                System.out.println("ss"+ rs2.getInt(1));
+                if (rs2.getInt(1) > 0) {
+                    output.writeInt(1);
+                } else {
+                    output.writeInt(0);
+                    trans_check = true;
+                }
+            }
+            // check if it a valid account
+            String query3 = "SELECT CASH FROM BANKACCOUNT WHERE ForgUser='" + uname + "' and NUMBER=" + cvv + "";
+            PreparedStatement ps3 = ServerMultiClients.con.prepareStatement(query3);
+            ResultSet rs3 = ps3.executeQuery();
+
+            if (rs3.next()) {
+                output.writeInt(1);
+                bank_cash = rs3.getInt(1);
+                output.writeInt(bank_cash);
+            } else {
+                output.writeInt(0);
+            }
+            int valid_account = input.readInt();
+            String query4 = null, query5 = null;
+            PreparedStatement ps4;
+            int amount = input.readInt();
+            if (valid_account > 0) {
+                if (trans != null && !trans_check) {
+                    if (amount > e_cash) {
+
+                    } else {
+                        query4 = "UPDATE PERSON SET E_WALLET=E_WALLET+" + amount + " WHERE  USERNAME='" + trans + "' ";
+                        query5 = "UPDATE PERSON SET E_WALLET= E_WALLET-" + amount + "WHERE USERNAME='" + uname + "'";
+                    }
+                } else if (trans == null) {
+                    if (amount <= bank_cash) {
+                        query4 = "UPDATE PERSON SET E_WALLET=E_WALLET+" + amount + " WHERE CVV_NUMBER=" + cvv + " and USERNAME='" + uname + "' ";
+                        query5 = "UPDATE BANKACCOUNT SET CASH= CASH-" + amount + "WHERE NUMBER=" + cvv + "";
+                    } else {
+
+                    }
+
+                }
+            }
+            if (query4 != null) {
+                ps4 = javaconnect.connectlogin().prepareStatement(query4);
+                ps4.executeUpdate();
+                ps4.close();
+            }
+            if (query5 != null) {
+                ps4 = javaconnect.connectlogin().prepareStatement(query5);
+                ps4.executeUpdate();
+                ps4.close();
+            }
+            String query6 = "SELECT E_WALLET,CVV_NUMBER FROM PERSON WHERE USERNAME = '" + uname + "'";
+            PreparedStatement ps6 = ServerMultiClients.con.prepareStatement(query6);
+            ResultSet rs6 = ps6.executeQuery();
+            rs6.next();
+            e_cash = rs6.getInt(1);
+            output.writeInt(e_cash);
+        } //wallet
+        finally {
+            String methodName = new Object() {
+            }
+                    .getClass()
+                    .getEnclosingMethod()
+                    .getName();
+            System.out.println("client excuted function:  " + methodName);
+
+        }
+
+    }
+    
+     public static synchronized void deposit_panel(DataInputStream input, DataOutputStream output) throws SQLException, IOException {
+        String uname = input.readUTF();
+        String query6 = "SELECT E_WALLET,CVV_NUMBER FROM PERSON WHERE USERNAME = '" + uname + "'";
+        PreparedStatement ps6 = ServerMultiClients.con.prepareStatement(query6);
+        ResultSet rs6 = ps6.executeQuery();
+        rs6.next();
+        int e_cash = rs6.getInt(1);
+        output.writeInt(e_cash);
+    }
+    
   
   
   
