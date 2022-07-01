@@ -156,6 +156,7 @@ public class main_menu extends javax.swing.JFrame {
         display_store();
 
     }
+    
  private void deposit_panelMouseClicked(java.awt.event.MouseEvent evt) {                                           
         // TODO add your handling code here:
         if(!check_admin()){
@@ -364,6 +365,10 @@ String get_E_wallet() {
         }
 
         return e_wallet;
+    }
+    private void search_barMouseClicked(java.awt.event.MouseEvent evt) {                                        
+        if ("Search Record..".equals(search_bar.getText()))
+            search_bar.setText("");
     }
  private void my_cart_panelMouseClicked(java.awt.event.MouseEvent evt) {                                           
 
