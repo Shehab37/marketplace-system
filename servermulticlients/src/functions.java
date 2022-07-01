@@ -561,7 +561,115 @@ public class Functions {
         System.out.println("client excuted function:  " + methodName);
 
        }
-  
+  public static void search_item(DataInputStream input, DataOutputStream output) throws SQLException, IOException {
+
+        try {
+            int flag = input.readInt();
+            int flag_cat = input.readInt();
+            System.out.println(flag + flag_cat);
+            String p_name = input.readUTF();
+            String cat_name = input.readUTF();
+            String query = "";
+            String count_query = "";
+            if (flag_cat <= 0) {
+                query = "SELECT * FROM APP.PRODUCTS WHERE PRODUCT_NAME LIKE '%" + p_name + "%'";
+                count_query = "SELECT count(*) as record_count FROM APP.PRODUCTS WHERE PRODUCT_NAME LIKE '%" + p_name + "%'";
+            } else if (flag <= 0) {
+                query = "SELECT * FROM APP.PRODUCTS WHERE CATEGORY LIKE '%" + cat_name + "%'";
+                count_query = "SELECT count(*) as record_count FROM APP.PRODUCTS WHERE CATEGORY LIKE '%" + cat_name + "%'  ";
+            } else {
+                query = "SELECT * FROM APP.PRODUCTS WHERE PRODUCT_NAME LIKE '%" + p_name + "%' AND CATEGORY LIKE '%" + cat_name + "%'   ";
+                count_query = "SELECT count(*) as record_count FROM APP.PRODUCTS WHERE PRODUCT_NAME LIKE '%" + p_name + "%' AND CATEGORY LIKE '%" + cat_name + "%'  ";
+            }
+            PreparedStatement ps = ServerMultiClients.con.prepareStatement(query);
+//        ps.setString(1, p_name);
+            ResultSet rs = ps.executeQuery();
+
+            PreparedStatement count_ps = ServerMultiClients.con.prepareStatement(count_query);
+//        count_ps.setString(1, p_name);
+            ResultSet count_rs = count_ps.executeQuery();
+            count_rs.next();
+            int c = count_rs.getInt("record_count");
+            System.out.println(c);
+            output.writeInt(c);
+            while (rs.next()) {
+                output.writeUTF(rs.getString(2));
+                output.writeUTF(rs.getString(3));
+                output.writeUTF(rs.getString(4));
+                output.writeUTF(rs.getString(5));
+
+            }
+        } //            ps.close();
+        catch (SQLException ex) {
+            output.writeInt(-1);
+
+        } finally {
+            output.close();
+            String methodName = new Object() {
+            }
+                    .getClass()
+                    .getEnclosingMethod()
+                    .getName();
+            System.out.println("client excuted function:  " + methodName);
+
+        }
+    }
+
+    public static void search_item_Admin(DataInputStream input, DataOutputStream output) throws SQLException, IOException {
+
+        try {
+            int flag = input.readInt();
+            int flag_cat = input.readInt();
+            System.out.println(flag + flag_cat);
+            String p_name = input.readUTF();
+            String cat_name = input.readUTF();
+            String query = "";
+            String count_query = "";
+            if (flag_cat <= 0) {
+                query = "SELECT * FROM APP.PRODUCTS WHERE PRODUCT_NAME LIKE '%" + p_name + "%'";
+                count_query = "SELECT count(*) as record_count FROM APP.PRODUCTS WHERE PRODUCT_NAME LIKE '%" + p_name + "%'";
+            } else if (flag <= 0) {
+                query = "SELECT * FROM APP.PRODUCTS WHERE CATEGORY LIKE '%" + cat_name + "%'";
+                count_query = "SELECT count(*) as record_count FROM APP.PRODUCTS WHERE CATEGORY LIKE '%" + cat_name + "%'  ";
+            } else {
+                query = "SELECT * FROM APP.PRODUCTS WHERE PRODUCT_NAME LIKE '%" + p_name + "%' AND CATEGORY LIKE '%" + cat_name + "%'   ";
+                count_query = "SELECT count(*) as record_count FROM APP.PRODUCTS WHERE PRODUCT_NAME LIKE '%" + p_name + "%' AND CATEGORY LIKE '%" + cat_name + "%'  ";
+            }
+            PreparedStatement ps = ServerMultiClients.con.prepareStatement(query);
+//        ps.setString(1, p_name);
+            ResultSet rs = ps.executeQuery();
+
+            PreparedStatement count_ps = ServerMultiClients.con.prepareStatement(count_query);
+//        count_ps.setString(1, p_name);
+            ResultSet count_rs = count_ps.executeQuery();
+            count_rs.next();
+            int c = count_rs.getInt("record_count");
+            System.out.println(c);
+            output.writeInt(c);
+            while (rs.next()) {
+                output.writeUTF(rs.getString(1));
+                output.writeUTF(rs.getString(2));
+                output.writeUTF(rs.getString(3));
+                output.writeUTF(rs.getString(4));
+                output.writeUTF(rs.getString(5));
+
+            }
+        } //            ps.close();
+        catch (SQLException ex) {
+            output.writeInt(-1);
+
+        } finally {
+            output.close();
+            String methodName = new Object() {
+            }
+                    .getClass()
+                    .getEnclosingMethod()
+                    .getName();
+            System.out.println("client excuted function:  " + methodName);
+
+        }
+    }
+
   
   
   
