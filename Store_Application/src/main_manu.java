@@ -103,6 +103,30 @@ public class main_menu extends javax.swing.JFrame {
             Logger.getLogger(main_menu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    private void my_cart_panelMouseClicked(java.awt.event.MouseEvent evt) {
+
+        //gui stuff
+        store.setVisible(false);
+        cart.setVisible(true);
+        store_admin.setVisible(false);
+        deposit.setVisible(false);
+        acc_info.setVisible(false);
+        //adjust color
+        adjustcolor(my_cart_panel);
+        current = my_cart_panel;
+
+        //database stuff
+        if (check_admin() == false) {
+            display_cart();
+        } else {
+            cart.setVisible(false);
+            admin_view_history.setVisible(true);
+            display_history();
+
+        }
+
+    }
 
 ///
 
