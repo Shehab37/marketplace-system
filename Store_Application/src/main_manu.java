@@ -84,6 +84,13 @@ public class main_menu extends javax.swing.JFrame {
             Logger.getLogger(main_menu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    private void deposit_panelMouseEntered(java.awt.event.MouseEvent evt) {                                           
+        if(check_admin()){deposit_panel.setBackground(new Color(186, 186, 186));}
+        else{deposit_panel.setBackground(new Color(85, 65, 118));}
+    }
+    
+    
     private void Store_buttonMouseExited(java.awt.event.MouseEvent evt) {                                         
         if (current != Store_button)
             Store_button.setBackground(new Color(64, 43, 100));
