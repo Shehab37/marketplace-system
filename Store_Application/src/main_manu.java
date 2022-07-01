@@ -132,7 +132,37 @@ public class main_menu extends javax.swing.JFrame {
         if ("Search By Category..".equals(cat_bar.getText()))
             cat_bar.setText("");
     }
-    
+    void display_cart() {
+        total_price_label.setText(String.valueOf(get_total_price()) + "$");
+
+        try {
+            create_socket();
+
+            DefaultTableModel model = (DefaultTableModel) pro_table3.getModel();
+            model.setRowCount(0);
+            String[] s = {"", "", "", ""};
+
+            serverOutputStream.writeUTF("get_cart_products");
+            serverOutputStream.writeUTF(Login.user);
+            int count = clientReadSource.readInt();
+
+            while (count != 0) {
+
+                s[0] = clientReadSource.readUTF();
+                s[1] = clientReadSource.readUTF();
+                s[2] = clientReadSource.readUTF();
+                s[3] = clientReadSource.readUTF();
+                count--;
+                model.addRow(s);
+            }
+
+            client_socket.close();
+
+        } catch (IOException ex) {
+            Logger.getLogger(main_menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
     
     private boolean check_admin() {
         boolean flag = false;
