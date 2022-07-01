@@ -171,6 +171,40 @@ String get_E_wallet() {
 
     }
     
+    public void adjustcolor(JPanel target) {
+        target.setBackground(new Color(85, 65, 118));
+        target.setForeground(Color.WHITE);
+        if (prev != target) {
+            prev.setBackground(new Color(64, 43, 100));
+            prev.setForeground(new Color(64, 43, 100));
+        }
+        prev = target;
+    }
+ private void my_cart_panelMouseClicked(java.awt.event.MouseEvent evt) {                                           
+
+        //gui stuff
+        store.setVisible(false);
+        cart.setVisible(true);
+        store_admin.setVisible(false);
+        deposit.setVisible(false);
+        acc_info.setVisible(false);
+        //adjust color
+        adjustcolor(my_cart_panel);
+        current = my_cart_panel;
+
+        //database stuff
+        if (check_admin() == false) {
+            display_cart();
+        } else {
+            cart.setVisible(false);
+            admin_view_history.setVisible(true);
+            display_history();
+
+        }
+
+    }      
+
+
     
      private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {                                         
         //code to add to cart : 
