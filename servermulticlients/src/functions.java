@@ -154,7 +154,63 @@ public class Functions {
         
         
     }
-  
+  public static synchronized void insert_to_cart(DataInputStream input, DataOutputStream output) throws SQLException, IOException {
+
+        try {
+
+            String user = input.readUTF();
+            String product = input.readUTF();
+            int amount = input.readInt();
+
+//        check if there is user and product in CART table if then >> increase amount in table by amount
+//else : excute query
+            int count = -1;
+            String query_1 = "SELECT COUNT(*) FROM CART WHERE FORGUSERNAME = ? AND PRODUCT_NAME = ? ";
+            PreparedStatement ps = ServerMultiClients.con.prepareStatement(query_1);
+            ps.setString(1, user);
+            ps.setString(2, product);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+            if (count > 0) {
+                String query_3 = "UPDATE CART SET SELECTED_AMOUNT=SELECTED_AMOUNT +? WHERE FORGUSERNAME= '" + user + "' and PRODUCT_NAME='" + product + "'";
+                PreparedStatement ps_3 = ServerMultiClients.con.prepareStatement(query_3);
+                ps_3.setInt(1, amount);
+                if (ps_3.executeUpdate() > 0) {
+                    output.writeInt(1);
+                } else {
+                    output.writeInt(-1);
+                }
+
+            } else {
+                String query_2 = "Insert into CART(FORGUSERNAME,PRODUCT_NAME,SELECTED_AMOUNT) values(?,?,?)";
+
+                PreparedStatement ps_2 = ServerMultiClients.con.prepareStatement(query_2);
+                ps_2.setString(1, user);
+                ps_2.setString(2, product);
+                ps_2.setInt(3, amount);
+
+                if (ps_2.executeUpdate() > 0) {
+                    output.writeInt(1);
+                } else {
+                    output.writeInt(-1);
+                }
+            }
+        } catch (SQLException ex) {
+            output.writeInt(-1);
+
+        } finally {
+            output.close();
+            String methodName = new Object() {
+            }
+                    .getClass()
+                    .getEnclosingMethod()
+                    .getName();
+            System.out.println("client excuted function:  " + methodName);
+        }
+
+    }
     public static synchronized void deposit(DataInputStream input, DataOutputStream output) throws SQLException, IOException {
 //         String trans = "";
         try (output) {
