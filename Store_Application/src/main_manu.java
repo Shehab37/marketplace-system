@@ -716,7 +716,9 @@ private void pro_table2MouseClicked(java.awt.event.MouseEvent evt) {
                     JOptionPane.showMessageDialog(null, "amount has been updated");
                 }
             }
-
+  private void Store_buttonMouseClicked(java.awt.event.MouseEvent evt) {                                          
+        store_button();
+    } 
 //        String query = "UPDATE ORDERS SET SELECTED_AMOUNT=? WHERE FORGUSERNAME= '"+Login.user+"' and PRODUCT_NAME='"+target_name2+"'" ;
 //        Connection con = javaconnect.connectlogin();
 //        javaconnect.connectlogin();
