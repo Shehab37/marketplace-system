@@ -570,5 +570,61 @@ private void pro_table2MouseClicked(java.awt.event.MouseEvent evt) {
         }
 
     } 
+          private void jButton5MouseClicked(java.awt.event.MouseEvent evt) {                                      
+
+        try {
+            String s = amount_update.getText();
+            int act_amount = Integer.parseInt(s);
+            boolean valid = true;
+
+            create_socket();
+
+            serverOutputStream.writeUTF("get_amount");
+            serverOutputStream.writeUTF(target_name2);
+
+            int temp = clientReadSource.readInt();
+
+            if (act_amount <= 0 || temp < act_amount) {
+                valid = false;
+                JOptionPane.showMessageDialog(null, "Please enter a positive valid amount");
+            }
+
+            client_socket.close();
+
+            if (valid) {
+                create_socket();
+
+                serverOutputStream.writeUTF("change_amount");
+                serverOutputStream.writeUTF(Login.user);
+                serverOutputStream.writeUTF(target_name2);
+                serverOutputStream.writeInt(Integer.parseInt(amount_update.getText()));
+                int res = clientReadSource.readInt();
+
+                client_socket.close();
+                display_cart();
+                if (res == 1) {
+                    JOptionPane.showMessageDialog(null, "amount has been updated");
+                }
+            }
+
+//        String query = "UPDATE ORDERS SET SELECTED_AMOUNT=? WHERE FORGUSERNAME= '"+Login.user+"' and PRODUCT_NAME='"+target_name2+"'" ;
+//        Connection con = javaconnect.connectlogin();
+//        javaconnect.connectlogin();
+//        PreparedStatement pss;
+//        try {
+//            pss = con.prepareStatement(query);
+//            pss.setInt(1, temp2);
+//            pss.executeUpdate();
+//            display_cart();
+//
+//} catch (SQLException ex) {
+//            Logger.getLogger(main_menu.class  
+//
+//.getName()).log(Level.SEVERE, null, ex);
+//        }        
+        } catch (IOException ex) {
+            Logger.getLogger(main_menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }   
     
     
