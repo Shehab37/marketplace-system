@@ -55,7 +55,54 @@ public class Functions {
 
     }
   
-  
+ public static synchronized void sign_up(DataInputStream input, DataOutputStream output) throws SQLException, IOException {
+        int cvv = 0;
+        String uname="";
+        String query = "INSERT INTO PERSON (FNAME , LNAME , USERNAME , PASSWORD , EMAIL_ADDRESS,CVV_NUMBER) VALUES(?,?,?,?,?,?)";
+
+        PreparedStatement ps = ServerMultiClients.con.prepareStatement(query);
+        ps.setString(1, input.readUTF());
+        ps.setString(2, input.readUTF());
+        uname = input.readUTF();
+        ps.setString(3,uname );
+        ps.setString(4, input.readUTF());
+        ps.setString(5, input.readUTF());
+        cvv = input.readInt();
+        ps.setInt(6,cvv );
+
+        try {
+            if (ps.executeUpdate() > 0) {
+                output.writeInt(1);
+                
+                String query2 = "UPDATE  BANKACCOUNT SET FORGUSER='"+uname+"'  WHERE NUMBER =?  ";
+             PreparedStatement ps2 = ServerMultiClients.con.prepareStatement(query2);
+              ps2.setInt(1, cvv);
+//           ps2.executeQuery();
+           if(ps2.executeUpdate() >0 ){}
+            
+            ps2.close();
+   
+            
+            } else {
+                output.writeInt(-1);
+            }
+        } catch (SQLException ex) {
+            output.writeInt(-1);
+
+        }
+        finally {
+            output.close();
+            String methodName = new Object() {
+            }
+                    .getClass()
+                    .getEnclosingMethod()
+                    .getName();
+            System.out.println("client excuted function:  " + methodName);
+        }
+        
+             
+             
+    } 
   
   
     public static synchronized void check_out_order(DataInputStream input, DataOutputStream output) throws SQLException, IOException {
