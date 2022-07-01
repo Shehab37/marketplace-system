@@ -127,7 +127,11 @@ public class main_menu extends javax.swing.JFrame {
         }
 
     }
-
+ private void cat_barMouseClicked(java.awt.event.MouseEvent evt) {
+        // TODO add your handling code here:
+        if ("Search By Category..".equals(cat_bar.getText()))
+            cat_bar.setText("");
+    }
 ///
 
  private void store_button() {
