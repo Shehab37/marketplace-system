@@ -141,6 +141,13 @@ private void display_history() {
         }
     }
     
+     private void my_cart_panelMouseExited(java.awt.event.MouseEvent evt) {                                          
+        if (current != my_cart_panel)
+            my_cart_panel.setBackground(new Color(64, 43, 100));
+    } 
+    
+    
+    
     private void my_cart_panelMouseClicked(java.awt.event.MouseEvent evt) {
 
         //gui stuff
