@@ -90,7 +90,12 @@ public class main_menu extends javax.swing.JFrame {
     } 
     private void Store_buttonMouseEntered(java.awt.event.MouseEvent evt) {                                          
         Store_button.setBackground(new Color(85, 65, 118));
+    }
+       private void my_cart_panelMouseEntered(java.awt.event.MouseEvent evt) {                                           
+        my_cart_panel.setBackground(new Color(85, 65, 118));
     } 
+    
+    
 private void display_history() {
      try {
             create_socket();
