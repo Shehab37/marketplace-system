@@ -84,7 +84,32 @@ public class main_menu extends javax.swing.JFrame {
             Logger.getLogger(main_menu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+private void display_history() {
+     try {
+            create_socket();
 
+            DefaultTableModel model = (DefaultTableModel) table_history.getModel();
+            model.setRowCount(0);
+            String[] s = {"", "", "", ""};
+            
+            serverOutputStream.writeUTF("display_history");
+            int count = clientReadSource.readInt();    
+            while (count != 0) {
+
+               s[0] = clientReadSource.readUTF();
+               s[1] = clientReadSource.readUTF();
+               s[2] = clientReadSource.readUTF();
+               s[3] = clientReadSource.readUTF();
+                count--;
+                model.addRow(s);
+            }
+        client_socket.close();
+
+    }
+     catch (IOException ex) {
+            Logger.getLogger(main_menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     private void delete_item() {
         try {
             create_socket();
