@@ -9,7 +9,32 @@
 
 ///
 
+ private void store_button() {
+        // TODO add your handling code here:
+        // TODO add your handling code here:
+        //turn on Store button color only
 
+        //check if it's an admin
+        boolean flagg = check_admin();
+//
+        if (flagg) {
+            store_admin.setVisible(true);
+            store.setVisible(false);
+
+        } else {
+            store.setVisible(true);
+            store_admin.setVisible(false);
+        }
+
+        cart.setVisible(false);
+        deposit.setVisible(false);
+        acc_info.setVisible(false);
+        adjustcolor(Store_button);
+        current = Store_button;
+        admin_view_history.setVisible(false);
+        display_store();
+
+    }
  private void deposit_panelMouseClicked(java.awt.event.MouseEvent evt) {                                           
         // TODO add your handling code here:
         if(!check_admin()){
