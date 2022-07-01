@@ -353,5 +353,27 @@ String get_E_wallet() {
 
 
     }     
+      
+      private boolean check_price_with_wallet(int price) {
+        try {
+            create_socket();
+            serverOutputStream.writeUTF("check_price_with_wallet");
+            serverOutputStream.writeInt(price);
+            serverOutputStream.writeUTF(user);
+
+            int result = clientReadSource.readInt();
+            if (result == -1) {
+                JOptionPane.showMessageDialog(null, "your balance is not enough");
+            }
+            if (result == 1) {
+                return true;
+            }
+            client_socket.close();
+
+        } catch (IOException ex) {
+            Logger.getLogger(main_menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
     
     
