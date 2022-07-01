@@ -211,6 +211,42 @@ public class Functions {
         }
 
     }
+     public static void validate_cvv(DataInputStream input, DataOutputStream output) throws SQLException, IOException {
+        int cvv = 0;
+        cvv = input.readInt();
+//         System.out.println(cvv);
+        String query = "SELECT COUNT(*) FROM BANKACCOUNT  WHERE NUMBER ="+cvv+"  ";
+         PreparedStatement ps2 = ServerMultiClients.con.prepareStatement(query);
+        ResultSet rs = ps2.executeQuery();
+        rs.next();
+ 
+        String query2 = "SELECT FORGUSER FROM BANKACCOUNT  WHERE NUMBER ="+cvv+"  ";
+         PreparedStatement ps3 = ServerMultiClients.con.prepareStatement(query2);
+        ResultSet rs3 = ps3.executeQuery();
+        rs3.next();
+
+         System.out.println(rs3.getString(1));
+        if(rs.getInt(1) <= 0 || rs3.getString(1) != null ){
+             output.writeInt(-1);
+ 
+        }
+        else{
+             output.writeInt(1);
+
+        }
+        ps3.close();
+         ps2.close();
+
+         String methodName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        System.out.println("client excuted function:  " + methodName);
+
+
+    }
+    
     public static synchronized void deposit(DataInputStream input, DataOutputStream output) throws SQLException, IOException {
 //         String trans = "";
         try (output) {
