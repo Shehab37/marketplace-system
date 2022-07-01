@@ -326,6 +326,29 @@ String get_E_wallet() {
         }
         prev = target;
     }
+    String get_E_wallet() {
+        String e_wallet = "-1";
+        String query6 = "SELECT E_WALLET  FROM PERSON WHERE USERNAME='" + Login.user + "' ";
+        Connection con = javaconnect.connectlogin();
+        javaconnect.connectlogin();
+        try {
+            PreparedStatement pr = con.prepareStatement(query6);
+            ResultSet rs = pr.executeQuery();
+
+            if (rs.next()) {
+                e_wallet = rs.getString(1);
+                show_price.setText(rs.getString(1) + " $");
+
+            }
+            pr.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Create_account.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+
+        return e_wallet;
+    }
  private void my_cart_panelMouseClicked(java.awt.event.MouseEvent evt) {                                           
 
         //gui stuff
