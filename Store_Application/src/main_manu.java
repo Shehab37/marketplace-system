@@ -494,7 +494,15 @@ String get_E_wallet() {
         }
 
         }
-
+private void pro_table2MouseClicked(java.awt.event.MouseEvent evt) {                                        
+        int row = pro_table2.getSelectedRow();
+        DefaultTableModel model = (DefaultTableModel) pro_table2.getModel();
+        id.setText(model.getValueAt(row, 0).toString());
+        name.setText(model.getValueAt(row, 1).toString());
+        price.setText(model.getValueAt(row, 2).toString());
+        amount.setText(model.getValueAt(row, 3).toString());
+        cat.setText(model.getValueAt(row, 4).toString());
+    }
 
     }     
     
