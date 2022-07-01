@@ -84,6 +84,10 @@ public class main_menu extends javax.swing.JFrame {
             Logger.getLogger(main_menu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    private void Store_buttonMouseEntered(java.awt.event.MouseEvent evt) {                                          
+        Store_button.setBackground(new Color(85, 65, 118));
+    } 
 private void display_history() {
      try {
             create_socket();
