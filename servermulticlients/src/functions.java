@@ -59,7 +59,31 @@ public class Functions {
             System.out.println("client excuted function:  " + methodName);
 
         }
+    }   public static void view_account(DataInputStream input, DataOutputStream output) throws SQLException, IOException {
+        String user = input.readUTF();
+        String query = "SELECT * FROM APP.PERSON WHERE USERNAME='" + user + "' ";
+        PreparedStatement ps = ServerMultiClients.con.prepareStatement(query);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            output.writeUTF(rs.getString(3));
+            output.writeUTF(rs.getString(2));
+            output.writeUTF(rs.getString(1));
+            output.writeUTF(rs.getString(5));
+            output.writeUTF(rs.getString(4));
+            output.writeUTF(rs.getString(8));
+            
+        }
+        output.close();
+        String methodName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        System.out.println("client excuted function:  " + methodName);
+
     }
+    
+ 
 
       public static void check_admin(DataInputStream input, DataOutputStream output) throws SQLException, IOException {
 
@@ -133,7 +157,34 @@ public class Functions {
         
              
              
-    } 
+    }  public static void get_products_user(DataInputStream input, DataOutputStream output) throws SQLException, IOException {
+        String query = "SELECT * FROM APP.PRODUCTS";
+        PreparedStatement ps = ServerMultiClients.con.prepareStatement(query);
+        ResultSet rs = ps.executeQuery();
+
+        String count_query = "SELECT count(*) as record_count FROM APP.PRODUCTS";
+        PreparedStatement count_ps = ServerMultiClients.con.prepareStatement(count_query);
+        ResultSet count_rs = count_ps.executeQuery();
+        count_rs.next();
+        int c = count_rs.getInt("record_count");
+//        System.out.println(c);
+        output.writeInt(c);
+        while (rs.next()) {
+            output.writeUTF(rs.getString(2));
+            output.writeUTF(rs.getString(3));
+            output.writeUTF(rs.getString(4));
+            output.writeUTF(rs.getString(5));
+
+        }
+        output.close();
+        String methodName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        System.out.println("client excuted function:  " + methodName);
+
+    }
   
   
     public static synchronized void check_out_order(DataInputStream input, DataOutputStream output) throws SQLException, IOException {
