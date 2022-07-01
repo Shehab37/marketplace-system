@@ -326,6 +326,22 @@ String get_E_wallet() {
         }
         prev = target;
     }
+    private int get_total_price() {
+        int price = 2;
+        try {
+            create_socket();
+            serverOutputStream.writeUTF("get_total_price");
+
+            serverOutputStream.writeUTF(user);
+
+            price = clientReadSource.readInt();
+            client_socket.close();
+
+        } catch (IOException ex) {
+            Logger.getLogger(main_menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return price;
+    }
     String get_E_wallet() {
         String e_wallet = "-1";
         String query6 = "SELECT E_WALLET  FROM PERSON WHERE USERNAME='" + Login.user + "' ";
