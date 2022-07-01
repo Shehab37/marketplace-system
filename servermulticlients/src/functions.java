@@ -29,7 +29,38 @@ public class Functions {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
         return sdf.format(cal.getTime());
     }
-  
+    
+      public static void login(DataInputStream input, DataOutputStream output) throws SQLException, IOException, InterruptedException {
+
+        String user_name = input.readUTF();
+        String password = input.readUTF();
+
+        String login = "SELECT USERNAME,PASSWORD FROM APP.PERSON WHERE username=? AND password=? ";
+        PreparedStatement ps = ServerMultiClients.con.prepareStatement(login);
+        ps.setString(1, user_name);
+        ps.setString(2, password);
+
+        ResultSet rs = ps.executeQuery();
+        try (output) {
+            if (rs.next()) {
+                output.writeInt(1);
+            } else {
+                output.writeInt(-1);
+            }
+
+        } catch (IOException ex) {
+            Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            String methodName = new Object() {
+            }
+                    .getClass()
+                    .getEnclosingMethod()
+                    .getName();
+            System.out.println("client excuted function:  " + methodName);
+
+        }
+    }
+
       public static void check_admin(DataInputStream input, DataOutputStream output) throws SQLException, IOException {
 
         String user = input.readUTF();
