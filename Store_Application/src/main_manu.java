@@ -132,6 +132,52 @@ public class main_menu extends javax.swing.JFrame {
         if ("Search By Category..".equals(cat_bar.getText()))
             cat_bar.setText("");
     }
+    
+    
+    private boolean check_admin() {
+        boolean flag = false;
+        try {
+            create_socket();
+            serverOutputStream.writeUTF("check_admin");
+            serverOutputStream.writeUTF(Login.user);
+            int res = clientReadSource.readInt();
+
+            if (res == 1) {
+                flag = true;
+            }
+            client_socket.close();
+        } catch (IOException ex) {
+            Logger.getLogger(main_menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
+
+        try {
+            create_socket();
+
+            serverOutputStream.writeUTF("remove_all_cart");
+            serverOutputStream.writeUTF(Login.user);
+            int res = clientReadSource.readInt();
+
+            client_socket.close();
+            display_cart();
+
+        } catch (IOException ex) {
+            Logger.getLogger(main_menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+//        String query = "DELETE FROM ORDERS WHERE FORGUSERNAME= '"+Login.user+"' " ;
+//        Connection con = javaconnect.connectlogin();
+//        javaconnect.connectlogin();
+//        PreparedStatement pss;
+//        try {
+//            pss = con.prepareStatement(query);
+//            pss.executeUpdate();
+//            display_cart();
+
+    }
+            
+            
 ///
 
  private void store_button() {
