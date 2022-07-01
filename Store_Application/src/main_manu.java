@@ -520,6 +520,55 @@ private void pro_table2MouseClicked(java.awt.event.MouseEvent evt) {
         cat.setText(model.getValueAt(row, 4).toString());
     }
 
-    }     
+    } 
+         
+         private void searchActionPerformed(java.awt.event.ActionEvent evt) {                                       
+
+        try {
+            create_socket();
+            String look = search_bar.getText();
+            String cat_look = cat_bar.getText();
+            System.out.println(look + " " + cat_look);
+            serverOutputStream.writeUTF("search_item");
+            // setting up the flags
+            if (look == " ") {
+                System.out.println("treu");
+                serverOutputStream.writeInt(0);
+            } else {
+                System.out.println("false");
+                serverOutputStream.writeInt(1);
+            }
+            if (cat_look == " ") {
+                System.out.println("treu");
+                serverOutputStream.writeInt(0);
+            } else {
+                System.out.println("false");
+                serverOutputStream.writeInt(1);
+            }
+
+            serverOutputStream.writeUTF(look);
+            serverOutputStream.writeUTF(cat_look);
+
+            DefaultTableModel model = (DefaultTableModel) pro_table.getModel();
+            model.setRowCount(0);
+            String[] s = {"", "", "", ""};
+
+            int count = clientReadSource.readInt();
+
+            while (count != 0) {
+
+                s[0] = clientReadSource.readUTF();
+                s[1] = clientReadSource.readUTF();
+                s[2] = clientReadSource.readUTF();
+                s[3] = clientReadSource.readUTF();
+                count--;
+                model.addRow(s);
+            }
+            client_socket.close();
+        } catch (IOException ex) {
+            Logger.getLogger(main_menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    } 
     
     
