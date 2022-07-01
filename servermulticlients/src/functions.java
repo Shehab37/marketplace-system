@@ -272,7 +272,42 @@ public class Functions {
         output.writeInt(e_cash);
     }
     
-  
+  public static void display_client_history (DataInputStream input, DataOutputStream output) throws SQLException, IOException {
+     
+     String query = "SELECT O.P_NAME,P.price,O.AMOUNT,M.DATE_,M.TOTAL_PRICE,O.ORDER_ID FROM MAIN_ORDERS AS M, ORDERS_DETAILS AS O , PRODUCTS AS P WHERE O.ORDER_ID=M.ORDER_ID and M.USER_N="
+                    + "? and P.product_name=O.P_NAME ";     
+     String count_query = "SELECT count(*) as record_count FROM  APP.MAIN_ORDERS AS M, APP.ORDERS_DETAILS AS O ,"
+             + " APP.PRODUCTS AS P WHERE O.ORDER_ID=M.ORDER_ID and M.USER_N=? and P.product_name=O.P_NAME ";
+        String user= input.readUTF();   
+        PreparedStatement count_ps = ServerMultiClients.con.prepareStatement(count_query);
+        
+        count_ps.setString(1,user );
+        ResultSet count_rs = count_ps.executeQuery();
+        count_rs.next();
+        int c = count_rs.getInt("record_count");
+        output.writeInt(c);
+    
+
+     PreparedStatement ps4 = null;
+     ps4 = ServerMultiClients.con.prepareStatement(query);
+     ps4.setString(1,user );
+     ResultSet rs = ps4.executeQuery();
+        
+     while (rs.next()) {
+            output.writeUTF(rs.getString(1));
+            output.writeUTF(rs.getString(2));
+            output.writeUTF(rs.getString(4));
+            output.writeUTF(rs.getString(3));
+        }
+        output.close();
+        String methodName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        System.out.println("client excuted function:  " + methodName);
+
+       }
   
   
   
