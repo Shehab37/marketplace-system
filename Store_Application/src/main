@@ -167,8 +167,60 @@ String get_E_wallet() {
 
 //        show_price.setText(rs.getString(1) + " $");
         trans_acc.setText(null);// reset the field to null
+        
 
+    }
+    
+    
+     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        //code to add to cart : 
+        // target_name
+        // Login.user()
+        String s = amount_text.getText();
+        int act_amount = Integer.parseInt(s);
+        boolean valid = true;
 
-    }               
+        try {
+
+            create_socket();
+
+            serverOutputStream.writeUTF("get_amount");
+            serverOutputStream.writeUTF(target_name);
+
+            int temp = clientReadSource.readInt();
+
+            if (act_amount <= 0 || temp < act_amount) {
+                valid = false;
+                JOptionPane.showMessageDialog(null, "Please enter a positive valid amount");
+            }
+
+            client_socket.close();
+
+        } catch (IOException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        if (valid) {
+            try {
+                create_socket();
+
+                serverOutputStream.writeUTF("insert_to_cart");
+                serverOutputStream.writeUTF(Login.user);
+                serverOutputStream.writeUTF(target_name);
+                serverOutputStream.writeInt(Integer.parseInt(amount_text.getText()));
+                int res = clientReadSource.readInt();
+
+                client_socket.close();
+                if (res == 1) {
+                    JOptionPane.showMessageDialog(null, "Item has been added to cart");
+                } else {
+                    JOptionPane.showMessageDialog(null, "error");
+                }
+
+            } catch (IOException ex) {
+                Logger.getLogger(main_menu.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
     
     
