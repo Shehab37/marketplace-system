@@ -222,5 +222,77 @@ String get_E_wallet() {
             }
 
         }
+        private void view_infoMouseClicked(java.awt.event.MouseEvent evt) {                                       
+        /**
+         * ******* GUI STUFF ******
+         */
+        store.setVisible(false);
+        admin_view_history.setVisible(false);
+        cart.setVisible(false);
+        store_admin.setVisible(false);
+        deposit.setVisible(false);
+        acc_info.setVisible(true);
+        if(check_admin()){
+        client_history_table.setVisible(false);
+        jScrollPane5.setVisible(false);
+        jLabel44.setVisible(false);
+        e_label.setVisible(false);
+        e_text.setVisible(false);
+        }
+        //adjust color
+        adjustcolor(view_info);
+        current = view_info;
+
+        /**
+         * **** DATABASE STUFF ******
+         */
+        try {
+            create_socket();
+            serverOutputStream.writeUTF("view_account");
+            serverOutputStream.writeUTF(Login.user);
+
+            first_name.setText(clientReadSource.readUTF());
+            last_name.setText(clientReadSource.readUTF());
+            user_name.setText(clientReadSource.readUTF());
+            email_address.setText(clientReadSource.readUTF());
+            password.setText(clientReadSource.readUTF());
+            e_text.setText(clientReadSource.readUTF());
+            client_socket.close();
+        } catch (IOException ex) {
+            Logger.getLogger(main_menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        // client history table --> client code
+        if (!check_admin()) {
+            try {
+            create_socket();
+
+            DefaultTableModel model = (DefaultTableModel) client_history_table.getModel();
+            model.setRowCount(0);
+            String[] s = {"", "", "",""};
+            
+            serverOutputStream.writeUTF("display_client_history");
+            serverOutputStream.writeUTF(Login.user);
+            int count = clientReadSource.readInt();    
+            while (count != 0) {
+
+               s[0] = clientReadSource.readUTF();
+               s[1] = clientReadSource.readUTF();
+               s[2] = clientReadSource.readUTF();
+               s[3] = clientReadSource.readUTF();
+                count--;
+                model.addRow(s);
+            }
+        client_socket.close();
+
+    }
+     catch (IOException ex) {
+            Logger.getLogger(main_menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        }
+
+
+    }     
     
     
