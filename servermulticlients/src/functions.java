@@ -614,6 +614,25 @@ public class Functions {
 
         }
     }
+    private int get_total_price() {
+        int price = 2;
+        try {
+            create_socket();
+            serverOutputStream.writeUTF("get_total_price");
+
+            serverOutputStream.writeUTF(user);
+
+            price = clientReadSource.readInt();
+            client_socket.close();
+
+        } catch (IOException ex) {
+            Logger.getLogger(main_menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return price;
+    }
+
+Message #general
+
 
     public static void search_item_Admin(DataInputStream input, DataOutputStream output) throws SQLException, IOException {
 
