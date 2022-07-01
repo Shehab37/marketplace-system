@@ -410,6 +410,38 @@ public class Functions {
         int e_cash = rs6.getInt(1);
         output.writeInt(e_cash);
     }
+    public static void display_history (DataInputStream input, DataOutputStream output) throws SQLException, IOException {
+
+     String query = "SELECT ORDER_ID,USERN,DATE,TOTAL_PRICE FROM MAIN_ORDERS";
+
+     String count_query = "SELECT count(*) as record_count FROM APP.MAIN_ORDERS";
+        PreparedStatement count_ps = ServerMultiClients.con.prepareStatement(count_query);
+        ResultSet count_rs = count_ps.executeQuery();
+        count_rs.next();
+        int c = count_rs.getInt("record_count");
+        output.writeInt(c);
+
+
+     PreparedStatement ps4 = null;
+     ps4 = ServerMultiClients.con.prepareStatement(query);
+     ResultSet rs = ps4.executeQuery();
+
+     while (rs.next()) {
+            output.writeUTF(rs.getString(1));
+            output.writeUTF(rs.getString(2));
+            output.writeUTF(rs.getString(3));
+            output.writeUTF(rs.getString(4));
+        }
+        output.close();
+        String methodName = new Object() {
+        }
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
+        System.out.println("client excuted function:  " + methodName);
+
+
+    }
     
   public static void display_client_history (DataInputStream input, DataOutputStream output) throws SQLException, IOException {
      
