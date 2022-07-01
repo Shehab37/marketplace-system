@@ -1,11 +1,108 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
+package my_package;
 
+import java.awt.Color;
+import java.awt.GridLayout;
+import java.awt.event.ItemEvent;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.plugins.tiff.ExifTIFFTagSet;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+import static my_package.Connect.*;
+import static my_package.Login.user;
 
+/**
+ * author@Shady
+ */
+public class main_menu extends javax.swing.JFrame {
 
+    /**
+     * **** GUI attributes *****
+     */
+    public boolean transfer = false;
+    JPanel prev;
+    JPanel current;
 
+    // this variable is used to get the id of the selected product in table pro_table
+    String target_name = null, target_name2 = null;
 
+//    int pro_id = 0;
+//    String pro_name = "";
+//    int pro_amount = 0;
+//    int pro_price = 0;
+    private void add_item() {
+        try {
+            create_socket();
+            serverOutputStream.writeUTF("add_item");
 
+            serverOutputStream.writeInt(Integer.parseInt(id.getText()));
+            serverOutputStream.writeUTF(name.getText());
+            serverOutputStream.writeInt(Integer.parseInt(price.getText()));
+            serverOutputStream.writeInt(Integer.parseInt(amount.getText()));
+            serverOutputStream.writeUTF(cat.getText());
 
+            int res = clientReadSource.readInt();
+            if (res != 1) {
+                JOptionPane.showMessageDialog(null, "adding failed,check data and try again");
+            }
 
+            client_socket.close();
+            display_admin_store();
+        } catch (IOException ex) {
+            Logger.getLogger(main_menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void update_item() {
+        try {
+            create_socket();
+            serverOutputStream.writeUTF("update_item");
+
+            serverOutputStream.writeInt(Integer.parseInt(id.getText()));
+            serverOutputStream.writeUTF(name.getText());
+            serverOutputStream.writeInt(Integer.parseInt(price.getText()));
+            serverOutputStream.writeInt(Integer.parseInt(amount.getText()));
+            serverOutputStream.writeUTF(cat.getText());
+            int res = clientReadSource.readInt();
+            if (res != 1) {
+                JOptionPane.showMessageDialog(null, "updating failed,check data and try again");
+            }
+
+            client_socket.close();
+            display_admin_store();
+        } catch (IOException ex) {
+            Logger.getLogger(main_menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void delete_item() {
+        try {
+            create_socket();
+            serverOutputStream.writeUTF("delete_item");
+
+            serverOutputStream.writeInt(Integer.parseInt(id.getText()));
+
+            int res = clientReadSource.readInt();
+            if (res != 1) {
+                JOptionPane.showMessageDialog(null, "deletion failed,check data and try again");
+            }
+
+            client_socket.close();
+            display_admin_store();
+        } catch (IOException ex) {
+            Logger.getLogger(main_menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
 ///
 
@@ -353,27 +450,5 @@ String get_E_wallet() {
 
 
     }     
-      
-      private boolean check_price_with_wallet(int price) {
-        try {
-            create_socket();
-            serverOutputStream.writeUTF("check_price_with_wallet");
-            serverOutputStream.writeInt(price);
-            serverOutputStream.writeUTF(user);
-
-            int result = clientReadSource.readInt();
-            if (result == -1) {
-                JOptionPane.showMessageDialog(null, "your balance is not enough");
-            }
-            if (result == 1) {
-                return true;
-            }
-            client_socket.close();
-
-        } catch (IOException ex) {
-            Logger.getLogger(main_menu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
-    }
     
     
