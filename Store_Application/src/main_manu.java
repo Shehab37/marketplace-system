@@ -84,56 +84,7 @@ public class main_menu extends javax.swing.JFrame {
             Logger.getLogger(main_menu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    private void deposit_panelMouseExited(java.awt.event.MouseEvent evt) {                                          
-        if(check_admin()){deposit_panel.setBackground(new Color(186, 186, 186));}
-        else{
-        if (current != deposit_panel)
-            deposit_panel.setBackground(new Color(64, 43, 100));}
-    }
-    private void deposit_panelMouseEntered(java.awt.event.MouseEvent evt) {                                           
-        if(check_admin()){deposit_panel.setBackground(new Color(186, 186, 186));}
-        else{deposit_panel.setBackground(new Color(85, 65, 118));}
-    }
-    
-    
-    private void Store_buttonMouseExited(java.awt.event.MouseEvent evt) {                                         
-        if (current != Store_button)
-            Store_button.setBackground(new Color(64, 43, 100));
-    } 
-    private void Store_buttonMouseEntered(java.awt.event.MouseEvent evt) {                                          
-        Store_button.setBackground(new Color(85, 65, 118));
-    }
-       private void my_cart_panelMouseEntered(java.awt.event.MouseEvent evt) {                                           
-        my_cart_panel.setBackground(new Color(85, 65, 118));
-    } 
-    
-    
-private void display_history() {
-     try {
-            create_socket();
 
-            DefaultTableModel model = (DefaultTableModel) table_history.getModel();
-            model.setRowCount(0);
-            String[] s = {"", "", "", ""};
-            
-            serverOutputStream.writeUTF("display_history");
-            int count = clientReadSource.readInt();    
-            while (count != 0) {
-
-               s[0] = clientReadSource.readUTF();
-               s[1] = clientReadSource.readUTF();
-               s[2] = clientReadSource.readUTF();
-               s[3] = clientReadSource.readUTF();
-                count--;
-                model.addRow(s);
-            }
-        client_socket.close();
-
-    }
-     catch (IOException ex) {
-            Logger.getLogger(main_menu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
     private void delete_item() {
         try {
             create_socket();
@@ -152,13 +103,6 @@ private void display_history() {
             Logger.getLogger(main_menu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-     private void my_cart_panelMouseExited(java.awt.event.MouseEvent evt) {                                          
-        if (current != my_cart_panel)
-            my_cart_panel.setBackground(new Color(64, 43, 100));
-    } 
-    
-    
     
     private void my_cart_panelMouseClicked(java.awt.event.MouseEvent evt) {
 
@@ -183,23 +127,37 @@ private void display_history() {
         }
 
     }
- private void cat_barMouseClicked(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
-        if ("Search By Category..".equals(cat_bar.getText()))
-            cat_bar.setText("");
-    }
-    void display_cart() {
-        total_price_label.setText(String.valueOf(get_total_price()) + "$");
+private void pro_tableMouseClicked(java.awt.event.MouseEvent evt) {
+        int row = pro_table.getSelectedRow();
+        DefaultTableModel model = (DefaultTableModel) pro_table.getModel();
+        target_name = (model.getValueAt(row, 0).toString());
 
+    }
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {
+//        get total price
+        int price = get_total_price();
+        boolean can_check_out = check_price_with_wallet(price);
+
+//        update main_orders table >>> user_n , date , total price table
+//        update orders_details table >>> order_id  , p_name , amount
+//        update products table
+        if (can_check_out) {
+            check_out_order(price);
+
+        }
+
+//        String query = "INSERT INTO CHECKOUT (ORDER_NUMBER,USER_N,P_NAME,AMOUNT,DATE_OF_ORDER) "
+//                + " SELECT ";
+    }
+    private void display_admin_store() {
         try {
             create_socket();
 
-            DefaultTableModel model = (DefaultTableModel) pro_table3.getModel();
+            DefaultTableModel model = (DefaultTableModel) pro_table2.getModel();
             model.setRowCount(0);
-            String[] s = {"", "", "", ""};
+            String[] s = {"", "", "", "", ""};
 
-            serverOutputStream.writeUTF("get_cart_products");
-            serverOutputStream.writeUTF(Login.user);
+            serverOutputStream.writeUTF("get_products_admin");
             int count = clientReadSource.readInt();
 
             while (count != 0) {
@@ -208,62 +166,16 @@ private void display_history() {
                 s[1] = clientReadSource.readUTF();
                 s[2] = clientReadSource.readUTF();
                 s[3] = clientReadSource.readUTF();
+                s[4] = clientReadSource.readUTF();
                 count--;
                 model.addRow(s);
             }
 
             client_socket.close();
-
-        } catch (IOException ex) {
-            Logger.getLogger(main_menu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
-    
-    private boolean check_admin() {
-        boolean flag = false;
-        try {
-            create_socket();
-            serverOutputStream.writeUTF("check_admin");
-            serverOutputStream.writeUTF(Login.user);
-            int res = clientReadSource.readInt();
-
-            if (res == 1) {
-                flag = true;
-            }
-            client_socket.close();
         } catch (IOException ex) {
             Logger.getLogger(main_menu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
-
-        try {
-            create_socket();
-
-            serverOutputStream.writeUTF("remove_all_cart");
-            serverOutputStream.writeUTF(Login.user);
-            int res = clientReadSource.readInt();
-
-            client_socket.close();
-            display_cart();
-
-        } catch (IOException ex) {
-            Logger.getLogger(main_menu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-//        String query = "DELETE FROM ORDERS WHERE FORGUSERNAME= '"+Login.user+"' " ;
-//        Connection con = javaconnect.connectlogin();
-//        javaconnect.connectlogin();
-//        PreparedStatement pss;
-//        try {
-//            pss = con.prepareStatement(query);
-//            pss.executeUpdate();
-//            display_cart();
-
-    }
-            
-            
 ///
 
  private void store_button() {
@@ -292,7 +204,6 @@ private void display_history() {
         display_store();
 
     }
-    
  private void deposit_panelMouseClicked(java.awt.event.MouseEvent evt) {                                           
         // TODO add your handling code here:
         if(!check_admin()){
@@ -502,10 +413,6 @@ String get_E_wallet() {
 
         return e_wallet;
     }
-    private void search_barMouseClicked(java.awt.event.MouseEvent evt) {                                        
-        if ("Search Record..".equals(search_bar.getText()))
-            search_bar.setText("");
-    }
  private void my_cart_panelMouseClicked(java.awt.event.MouseEvent evt) {                                           
 
         //gui stuff
@@ -709,65 +616,41 @@ private void pro_table2MouseClicked(java.awt.event.MouseEvent evt) {
         } catch (IOException ex) {
             Logger.getLogger(main_menu.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-    } 
-          private void jButton5MouseClicked(java.awt.event.MouseEvent evt) {                                      
+public static void main(String args[]) {
 
         try {
-            String s = amount_update.getText();
-            int act_amount = Integer.parseInt(s);
-            boolean valid = true;
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
 
-            create_socket();
-
-            serverOutputStream.writeUTF("get_amount");
-            serverOutputStream.writeUTF(target_name2);
-
-            int temp = clientReadSource.readInt();
-
-            if (act_amount <= 0 || temp < act_amount) {
-                valid = false;
-                JOptionPane.showMessageDialog(null, "Please enter a positive valid amount");
-            }
-
-            client_socket.close();
-
-            if (valid) {
-                create_socket();
-
-                serverOutputStream.writeUTF("change_amount");
-                serverOutputStream.writeUTF(Login.user);
-                serverOutputStream.writeUTF(target_name2);
-                serverOutputStream.writeInt(Integer.parseInt(amount_update.getText()));
-                int res = clientReadSource.readInt();
-
-                client_socket.close();
-                display_cart();
-                if (res == 1) {
-                    JOptionPane.showMessageDialog(null, "amount has been updated");
                 }
             }
-  private void Store_buttonMouseClicked(java.awt.event.MouseEvent evt) {                                          
-        store_button();
-    } 
-//        String query = "UPDATE ORDERS SET SELECTED_AMOUNT=? WHERE FORGUSERNAME= '"+Login.user+"' and PRODUCT_NAME='"+target_name2+"'" ;
-//        Connection con = javaconnect.connectlogin();
-//        javaconnect.connectlogin();
-//        PreparedStatement pss;
-//        try {
-//            pss = con.prepareStatement(query);
-//            pss.setInt(1, temp2);
-//            pss.executeUpdate();
-//            display_cart();
-//
-//} catch (SQLException ex) {
-//            Logger.getLogger(main_menu.class  
-//
-//.getName()).log(Level.SEVERE, null, ex);
-//        }        
-        } catch (IOException ex) {
-            Logger.getLogger(main_menu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(main_menu.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(main_menu.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(main_menu.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(main_menu.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-    }   
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new main_menu().setVisible(true);
+            }
+        });
+    }
+    } 
     
     
